@@ -7,6 +7,7 @@ This database file can be used in MC-SMRT to assign taxonomy and confidences to 
 ##Installation and Dependencies: 
 
 1) Ruby gems such as bio, troloop and nokogiri are required for Lineanator to function. Use the "gem install {name_of_the_gem}" command to install these gems.
+
 2) Download and install usearch v8.1.
    Create a soft link pointing towards this version of usearch and name it "usearch". The soft link name HAS TO BE usearch, this is VERY IMPORTANT.
 
@@ -43,7 +44,9 @@ Two of the output files are the ones which you gave as arguments to lineanator, 
 The basename of the FASTA_LINEAGE_OUTPUT_FILE given by you is used for creating other files using USEARCH commands. 
 For example, if the name of your FASTA_LINEAGE_OUTPUT_FILE is "16sMicrobial_ncbi_lineage.fasta", the output files created will be:
 1) 16sMicrobial_ncbi_lineage_filtered.fasta - File without the placeholder names.
+
 2) 16sMicrobial_ncbi_lineage_confidence.tc - File after training the sequences, also has the confidences.
+
 3) 16sMicrobial_ncbi_lineage_reference_database.udb - Final database file in udb format
 
  
