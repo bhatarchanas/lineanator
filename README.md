@@ -1,3 +1,5 @@
+Author - Archana S Bhat
+
 ###Introduction:
 
 Lineanator uses USEARCH and NCBI to create a database file with confidences up to the species level. 
