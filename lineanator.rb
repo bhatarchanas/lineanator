@@ -13,12 +13,12 @@ opts[:dumpfile].nil?              == false  ? dump_file = opts[:dumpfile]       
 opts[:seqfile].nil?               == false  ? seq_file = opts[:seqfile]                      : abort("Must supply a FASTA file which has all the 16s sequences using the '-s' argument.")
 opts[:tablineageoutfile].nil?     == false  ? tab_out_file = opts[:tablineageoutfile]        : abort("Must supply an output file name which will contain the lineage in a tab format using the '-t' argument.")
 opts[:fastalineageoutfile].nil?   == false  ? fasta_out_file = opts[:fastalineageoutfile]    : abort("Must supply an output file name which will contain the lineage in a FASTA format using the '-f' argument.")
-opts[:placeholdernamesfile].nil?  == false  ? ph_names_file = opts[:fastalineageoutfile]     : abort("Must supply a file which contains the place holder names using the '-p' argument.")
+opts[:placeholdernamesfile].nil?  == false  ? ph_names_file = opts[:placeholdernamesfile]     : abort("Must supply a file which contains the place holder names using the '-p' argument.")
 out_fasta_basename = File.basename(fasta_out_file, ".*")
 
 # Run the script which gives a file with all the xmls
 puts "Getting the file with XMLs for all tax id's ready..."
-`ruby get_all_xml.rb -d #{dump_file} -s #{seq_file}`
+ruby get_all_xml.rb -d #{dump_file} -s #{seq_file}`
 
 # Run the script which parses the file with all xmls
 puts "Parsing the file with all XMLs..."
@@ -30,7 +30,7 @@ puts "Removing place holder names..."
 
 # Run the command to train the sequences and obtain confidences
 puts "Training the sequences to give a file with confidences..."
-`usearch -utax_train #{out_fasta_basename}_filtered.fasta -taxconfsout #{out_fasta_basename}_confidence.tc -utax_splitlevels NVpcofgs -utax_trainlevels dpcofgs`
+`usearch -utax_train #{out_fasta_basename}_filtered.fasta -taxconfsout #{out_fasta_basename}_confidence.tc -log #{out_fasta_basename}_log.txt -utax_splitlevels NVpcofgs -utax_trainlevels dpcofgs`
 
 # Run the command to build the DB file
 puts "Making the DB file! Final step..."

@@ -107,7 +107,7 @@ doc.children.each do |child|
 
 				end
 
-			end
+			end	
 
 		end
 
@@ -161,7 +161,6 @@ all_taxa_hash.each do |gi_id, sub_hash|
 					end
 				elsif no_rank_hash[gi_id].length-1 == 2
 					if no_rank_hash[gi_id][0] != "cellular organisms"
-						sub_hash["species"] = no_rank_hash[gi_id][0]
 						sub_hash[rank] = "unclassified"
 					else
 						sub_hash[rank] = "unsure_"+no_rank_hash[gi_id][2]
@@ -182,7 +181,6 @@ all_taxa_hash.each do |gi_id, sub_hash|
 					end
 				elsif no_rank_hash[gi_id].length-1 == 3
 					if no_rank_hash[gi_id][0] != "cellular organisms"
-						sub_hash["species"] = no_rank_hash[gi_id][0]
 						sub_hash[rank] = "unclassified"
 					else
 						sub_hash[rank] = "unsure_"+no_rank_hash[gi_id][3]
@@ -215,15 +213,23 @@ ncbi_fasta_file.each do |entry|
     	def_string_2 = def_string.tr("\s","")
   		species_name = def_mod_split[4].split(" ")[0..1].join("_").tr('^A-Za-z0-9_', '')
     	species_name_1 = ",s:"+species_name+";"
-    		
+
+    	# Make sure the sceintific names of each taxa level has no special characters and replace the spaces with "_"
+    	kingdom = all_taxa_hash[gi_id]["kingdom"].tr('^A-Za-z0-9_ ', '').tr(" ", "_")
+    	phylum = all_taxa_hash[gi_id]["phylum"].tr('^A-Za-z0-9_ ', '').tr(" ", "_")
+    	clas = all_taxa_hash[gi_id]["class"].tr('^A-Za-z0-9_ ', '').tr(" ", "_")
+    	order = all_taxa_hash[gi_id]["order"].tr('^A-Za-z0-9_ ', '').tr(" ", "_")
+    	family = all_taxa_hash[gi_id]["family"].tr('^A-Za-z0-9_ ', '').tr(" ", "_")
+    	genus = all_taxa_hash[gi_id]["genus"].tr('^A-Za-z0-9_ ', '').tr(" ", "_")
+
 		# Get the lineage and write in the FASTA file 
-		tax_string = "tax=d:"+all_taxa_hash[gi_id]["kingdom"]+",p:"+all_taxa_hash[gi_id]["phylum"]+",c:"+all_taxa_hash[gi_id]["class"]+",o:"+all_taxa_hash[gi_id]["order"]+",f:"+all_taxa_hash[gi_id]["family"]+",g:"+all_taxa_hash[gi_id]["genus"]
+		tax_string = "tax=d:"+kingdom+",p:"+phylum+",c:"+clas+",o:"+order+",f:"+family+",g:"+genus
 		to_print = (">"+def_string_2+tax_string+species_name_1)
     	ncbi_lineage.puts(to_print)
     	ncbi_lineage.puts(entry.naseq.upcase)
     
     	# Get the lineage and write in the tab delimited file 
-    	lineage_file.puts("#{gi_id}\t#{all_taxa_hash[gi_id]["kingdom"]}\t#{all_taxa_hash[gi_id]["phylum"]}\t#{all_taxa_hash[gi_id]["class"]}\t#{all_taxa_hash[gi_id]["order"]}\t#{all_taxa_hash[gi_id]["family"]}\t#{all_taxa_hash[gi_id]["genus"]}\t#{species_name}")
+    	lineage_file.puts("#{gi_id}\t#{kingdom}\t#{phylum}\t#{clas}\t#{order}\t#{family}\t#{genus}\t#{species_name}")
 	end
 end
 	
