@@ -18,7 +18,7 @@ out_fasta_basename = File.basename(fasta_out_file, ".*")
 
 # Run the script which gives a file with all the xmls
 puts "Getting the file with XMLs for all tax id's ready..."
-ruby get_all_xml.rb -d #{dump_file} -s #{seq_file}`
+`ruby get_all_xml.rb -d #{dump_file} -s #{seq_file}`
 
 # Run the script which parses the file with all xmls
 puts "Parsing the file with all XMLs..."
