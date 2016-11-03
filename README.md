@@ -9,7 +9,7 @@ This database file can be used in MC-SMRT to assign taxonomy and confidences to 
 1) Ruby gems such as bio, troloop and nokogiri are required for Lineanator to function. Use the "gem install {name_of_the_gem}" command to install these gems.
 
 2) Download and install usearch v8.1.
-   Create a soft link pointing towards this version of usearch and name it "usearch". The soft link name HAS TO BE usearch, this is VERY IMPORTANT.
+   Create a soft link pointing towards this version of usearch and name it "usearch". The soft link name **HAS TO BE** usearch, this is **VERY IMPORTANT**.
 
 
 ##Usage: 
