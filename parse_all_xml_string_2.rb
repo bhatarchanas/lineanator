@@ -55,10 +55,13 @@ doc.children.each do |child|
 		rank_array = []
 		scientific_name_array = []
 		taxID = ""
+		taxID2 = ""
 	
 		xml_string_noko.xpath('//TaxaSet').each do |taxaSet_element|
 			#puts taxaSet_element
 			taxID = taxaSet_element.xpath('//TaxId').first.text
+			taxID2 = taxaSet_element.xpath('//AkaTaxIds//TaxId').text
+			#puts taxID2
 			taxaSet_element.xpath('//Rank').each do |rank_element|
 				rank = rank_element.text
 				#puts rank
@@ -75,7 +78,38 @@ doc.children.each do |child|
 		#puts scientific_name_array
 	
 		tax_gi_ids_hash.each do |gi_id, tax_id|
-			if tax_id == taxID
+
+			if tax_id == taxID	
+				# Assign null strings to all the attributes 
+				all_taxa_hash[gi_id] = {"kingdom" => "", "phylum" => "", "class" => "", "order" => "", "family" => "", "genus" => "", "species" => ""}
+				# array within the no_rank_hash			
+				array_in_no_rank = []
+
+				(0..rank_array.length-1).each do |each_rank|
+					#puts rank_array[each_rank]
+					if rank_array[each_rank] == "superkingdom"
+						all_taxa_hash[gi_id]["kingdom"] = scientific_name_array[each_rank]
+					elsif rank_array[each_rank] == "phylum"
+						all_taxa_hash[gi_id]["phylum"] = scientific_name_array[each_rank]
+					elsif rank_array[each_rank] == "class"
+						all_taxa_hash[gi_id]["class"] = scientific_name_array[each_rank]
+					elsif rank_array[each_rank] == "order"
+						all_taxa_hash[gi_id]["order"] = scientific_name_array[each_rank]
+					elsif rank_array[each_rank] == "family"
+						all_taxa_hash[gi_id]["family"] = scientific_name_array[each_rank]
+					elsif rank_array[each_rank] == "genus"
+						all_taxa_hash[gi_id]["genus"] = scientific_name_array[each_rank]
+					elsif rank_array[each_rank] == "species"
+						all_taxa_hash[gi_id]["species"] = scientific_name_array[each_rank]
+					end
+
+					# Get the no_rank_hash
+					if rank_array[each_rank] == "no rank"
+						array_in_no_rank.push(scientific_name_array[each_rank])
+						no_rank_hash[gi_id]= array_in_no_rank
+					end
+				end
+			elsif tax_id == taxID2
 				# Assign null strings to all the attributes 
 				all_taxa_hash[gi_id] = {"kingdom" => "", "phylum" => "", "class" => "", "order" => "", "family" => "", "genus" => "", "species" => ""}
 				# array within the no_rank_hash			
@@ -108,6 +142,7 @@ doc.children.each do |child|
 				end
 
 			end	
+			#puts all_taxa_hash[gi_id]
 
 		end
 
@@ -212,7 +247,13 @@ ncbi_fasta_file.each do |entry|
     	def_string = def_mod_split[0]+"|"+def_mod_split[1]+"|"+def_mod_split[2]+"|"+def_mod_split[3]+";"
     	def_string_2 = def_string.tr("\s","")
   		species_name = def_mod_split[4].split(" ")[0..1].join("_").tr('^A-Za-z0-9_', '')
-    	species_name_1 = ",s:"+species_name+";"
+
+    	# Variable to compare species names from 16s DB and XML
+    	database_sp_name = "16sDatabaseName=same;"
+    	# Variable that contains the strain name
+    	strain_name = "strain=NA;"
+    	# Variable that contains the completeness of the 16s seq
+    	completeness = "complete=no;"
 
     	# Make sure the sceintific names of each taxa level has no special characters and replace the spaces with "_"
     	kingdom = all_taxa_hash[gi_id]["kingdom"].tr('^A-Za-z0-9_ ', '').tr(" ", "_")
@@ -221,13 +262,27 @@ ncbi_fasta_file.each do |entry|
     	order = all_taxa_hash[gi_id]["order"].tr('^A-Za-z0-9_ ', '').tr(" ", "_")
     	family = all_taxa_hash[gi_id]["family"].tr('^A-Za-z0-9_ ', '').tr(" ", "_")
     	genus = all_taxa_hash[gi_id]["genus"].tr('^A-Za-z0-9_ ', '').tr(" ", "_")
+    	species = all_taxa_hash[gi_id]["species"].split(" ")[0..1].join("_").tr('^A-Za-z0-9_ ', '')
+
+    	if def_mod_split[4].include?("strain")
+    		sp_name_split = def_mod_split[4].split("\s")
+    		strain_name = "strain=" + sp_name_split[sp_name_split.find_index("strain") + 1] + "_" + sp_name_split[sp_name_split.find_index("strain") + 2] + ";"
+    	end
+
+    	if def_mod_split[4].include?("complete")
+    		completeness = "complete=yes;"
+    	end
+
+    	if species.casecmp(species_name) != 0
+    		database_sp_name = "16sDatabaseName=#{species_name};"
+    	end
 
 		# Get the lineage and write in the FASTA file 
-		tax_string = "tax=d:"+kingdom+",p:"+phylum+",c:"+clas+",o:"+order+",f:"+family+",g:"+genus
-		to_print = (">"+def_string_2+tax_string+species_name_1)
+		tax_string = "tax=d:"+kingdom+",p:"+phylum+",c:"+clas+",o:"+order+",f:"+family+",g:"+genus+",s:"+species+";"
+		to_print = (">"+def_string_2+tax_string+strain_name+completeness+database_sp_name)
     	ncbi_lineage.puts(to_print)
     	ncbi_lineage.puts(entry.naseq.upcase)
-    
+
     	# Get the lineage and write in the tab delimited file 
     	lineage_file.puts("#{gi_id}\t#{kingdom}\t#{phylum}\t#{clas}\t#{order}\t#{family}\t#{genus}\t#{species_name}")
 	end

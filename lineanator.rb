@@ -13,7 +13,7 @@ opts[:dumpfile].nil?              == false  ? dump_file = opts[:dumpfile]       
 opts[:seqfile].nil?               == false  ? seq_file = opts[:seqfile]                      : abort("Must supply a FASTA file which has all the 16s sequences using the '-s' argument.")
 opts[:tablineageoutfile].nil?     == false  ? tab_out_file = opts[:tablineageoutfile]        : abort("Must supply an output file name which will contain the lineage in a tab format using the '-t' argument.")
 opts[:fastalineageoutfile].nil?   == false  ? fasta_out_file = opts[:fastalineageoutfile]    : abort("Must supply an output file name which will contain the lineage in a FASTA format using the '-f' argument.")
-opts[:placeholdernamesfile].nil?  == false  ? ph_names_file = opts[:placeholdernamesfile]     : abort("Must supply a file which contains the place holder names using the '-p' argument.")
+opts[:placeholdernamesfile].nil?  == false  ? ph_names_file = opts[:placeholdernamesfile]    : abort("Must supply a file which contains the place holder names using the '-p' argument.")
 out_fasta_basename = File.basename(fasta_out_file, ".*")
 
 # Run the script which gives a file with all the xmls
