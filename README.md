@@ -16,10 +16,10 @@ This database file can be used in MC-SMRT to assign taxonomy and confidences to 
 
 ###Usage: 
 
-ruby lineanator.rb 	[-h] [-d DUMP_FILE] [-s SEQ_FILE] 
-					[-t TAB_DELIMITED_LINEAGE_OUTPUT_FILE] 
-					[-f FASTA_LINEAGE_OUTPUT_FILE] 
-					[-p PLACE_HOLDER_NAMES_FILE]
+ruby lineanator.rb 	> [-h] [-d DUMP_FILE] [-s SEQ_FILE] 
+					> [-t TAB_DELIMITED_LINEAGE_OUTPUT_FILE] 
+					> [-f FASTA_LINEAGE_OUTPUT_FILE] 
+					> [-p PLACE_HOLDER_NAMES_FILE]
 
 
 ###Arguments explained:
